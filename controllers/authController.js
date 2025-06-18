@@ -3,14 +3,14 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
-  const { email, contrasena } = req.body;
+  const { usuario, contrasena } = req.body;
 
-  if (!email || !contrasena) {
-    return res.status(400).json({ error: 'Email y contraseña son obligatorios' });
+  if (!usuario || !contrasena) {
+    return res.status(400).json({ error: 'Usuario y contraseña son obligatorios' });
   }
 
   try {
-    const result = await pool.query('SELECT * FROM usuarios WHERE email = $1 AND estado = $2', [email, 'activo']);
+    const result = await pool.query('SELECT * FROM usuarios WHERE usuario = $1 AND estado = $2', [usuario, 'activo']);
 
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -29,6 +29,7 @@ const login = async (req, res) => {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       email: usuario.email,
+      usuario: usuario.usuario,
       rol: usuario.rol,
     };
 
