@@ -2,12 +2,9 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-app.use(cors({
-  origin: ["http://localhost:5173"], // <-- tu frontend local
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
+const app = express();
+
+app.use(cors());
 
 const port = process.env.PORT || 3000;
 
