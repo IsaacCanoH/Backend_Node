@@ -16,21 +16,21 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    const usuario = result.rows[0];
+    const usuarioDB = result.rows[0];
 
-    const passwordMatch = await bcrypt.compare(contrasena, usuario.contrasena);
+    const passwordMatch = await bcrypt.compare(contrasena, usuarioDB.contrasena);
 
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
     const payload = {
-      id: usuario.id,
-      nombre: usuario.nombre,
-      apellido: usuario.apellido,
-      email: usuario.email,
-      usuario: usuario.usuario,
-      rol: usuario.rol,
+      id: usuarioDB.id,
+      nombre: usuarioDB.nombre,
+      apellido: usuarioDB.apellido,
+      email: usuarioDB.email,
+      usuario: usuarioDB.usuario,
+      rol: usuarioDB.rol,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
