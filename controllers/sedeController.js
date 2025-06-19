@@ -1,4 +1,8 @@
 const pool = require("../db");
+const jwt = require('jsonwebtoken');
+const QRCode = require('qrcode');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const registrarSedes = async(req, res) => {
     const { nombre, direccion, ubicacion_lat, ubicacion_lon, rango_metros } = req.body;
@@ -17,6 +21,8 @@ const registrarSedes = async(req, res) => {
     }
 };
 
+
+
 module.exports = {
-    registrarSedes
+    registrarSedes,
 }
