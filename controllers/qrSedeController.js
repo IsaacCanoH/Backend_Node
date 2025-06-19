@@ -11,9 +11,9 @@ const generarQRSede = async (req, res) => {
 
   try {
     // 1. Verificamos que la sede exista
-    const [sede] = await pool.query('SELECT * FROM Sedes WHERE sede_id = ?', [sede_id]);
+    const result = await pool.query('SELECT * FROM Sedes WHERE sede_id = $1', [sede_id]);
 
-    if (sede.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Sede no encontrada.' });
     }
 
