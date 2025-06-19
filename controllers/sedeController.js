@@ -18,6 +18,5 @@ const registrarSedes = async(req, res) => {
 };
 
 module.exports = {
-    registrarSedes,
-    enviarQRPorCorreo
+    registrarSedes
 }
