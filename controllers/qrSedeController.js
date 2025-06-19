@@ -1,7 +1,7 @@
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
+// Hola
 const generarQRSede = async (req, res) => {
   const { sede_id } = req.body;
 
