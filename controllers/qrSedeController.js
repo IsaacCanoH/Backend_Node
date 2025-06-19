@@ -54,7 +54,7 @@ const generarQRSede = async (req, res) => {
     });
 
     return res.status(200).json({
-      mensaje: 'QR generado y enviado por correo exitosamente.',
+      mensaje: 'QR generado y enviado por correo exitosamente.', token
     });
 
   } catch (error) {
