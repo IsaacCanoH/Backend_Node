@@ -41,7 +41,7 @@ const generarQRSede = async (req, res) => {
 
     await transporter.sendMail({
       from: `"Sistema de Asistencia" <${process.env.EMAIL_USER}>`,
-      to: "mac200504@gmail.com",
+      to: correo_destino,
       subject: 'Código QR de Sede',
       text: 'Adjunto encontrarás el código QR para el registro de asistencia de la sede.',
       attachments: [
