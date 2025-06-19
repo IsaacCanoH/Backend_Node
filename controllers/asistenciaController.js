@@ -21,7 +21,7 @@ const validarQR = async (req, res) => {
     const sedeDelQR = payload.sede_id;
 
     // 2. Obtener la sede del usuario desde la base de datos
-    const result = await pool.query('SELECT sede FROM usuarios WHERE usuario_id = $1', [usuario_id]);
+    const result = await pool.query('SELECT sede FROM usuarios WHERE id = $1', [usuario_id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
