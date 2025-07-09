@@ -13,13 +13,19 @@ app.use(express.json());
 
 const authRoutes = require('./routes/authRoutes');
 const sedeRoutes = require("./routes/sedeRoutes");
-const qrSedeRoutes = require("./routes/qrSedeRoutes");
-const asistenciaRoutes = require("./routes/asistenciaRoutes");
+const empleadoRoutes = require('./routes/empleadoRoutes');
+const oficinaRoutes = require('./routes/oficinaRoutes');
+const tipoBaseRoutes = require("./routes/tipoBaseRoutes");
+const registroAsistenciaRoutes = require("./routes/registroAsistenciasRoutes");
+const incidenciasRoutes = require("./routes/incidenciasRoutes");
 
 app.use('/api/auth', authRoutes);
 app.use('/api/sede', sedeRoutes);
-app.use('/api/qrsede',qrSedeRoutes);
-app.use('/api/asistencia',asistenciaRoutes);
+app.use('/api/empleado', empleadoRoutes);
+app.use('/api/oficina', oficinaRoutes);
+app.use('/api/tipobase', tipoBaseRoutes);
+app.use('/api/registrarasistencia', registroAsistenciaRoutes);
+app.use('/api/inicidencia', incidenciasRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);

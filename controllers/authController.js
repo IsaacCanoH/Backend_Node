@@ -1,47 +1,52 @@
-const pool = require('../db');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const db = require('../db'); // Asegúrate que esta conexión esté correcta
+
+function md5Encrypt(password) {
+  return crypto.createHash('md5').update(password).digest('hex');
+}
 
 const login = async (req, res) => {
-  const { usuario, contrasena } = req.body;
+  const { usuario, clave_acceso } = req.body;
 
-  if (!usuario || !contrasena) {
-    return res.status(400).json({ error: 'Usuario y contraseña son obligatorios' });
+  if (!usuario || !clave_acceso) {
+    return res.status(400).json({ status: 'error', message: 'Usuario y contraseña son obligatorios' });
   }
 
   try {
-    const result = await pool.query('SELECT * FROM usuarios WHERE usuario = $1 AND estado = $2', [usuario, 'activo']);
+    const hashedPassword = md5Encrypt(clave_acceso);
+
+    const result = await db.query(
+      `SELECT usuario_id, nombre, ap_paterno, ap_materno, email, usuario 
+       FROM reloj_checador_usuarios 
+       WHERE usuario = $1 AND clave_acceso = $2`,
+      [usuario, hashedPassword]
+    );
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
+      return res.status(401).json({ status: 'error', message: 'Credenciales incorrectas' });
     }
 
-    const usuarioDB = result.rows[0];
+    const empleado = result.rows[0];
 
-    const passwordMatch = await bcrypt.compare(contrasena, usuarioDB.contrasena);
-
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
-    }
-
-    const payload = {
-      id: usuarioDB.id,
-      nombre: usuarioDB.nombre,
-      apellido: usuarioDB.apellido,
-      email: usuarioDB.email,
-      usuario: usuarioDB.usuario,
-      rol: usuarioDB.rol,
-    };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
-
-    res.json({ token, payload });
+    return res.status(200).json({
+      status: 'success',
+      code: 200,
+      message: 'Acceso permitido',
+      data: {
+        user: {
+          empleado_id: empleado.usuario_id,
+          nombre: empleado.nombre,
+          apellido_p: empleado.ap_paterno,
+          apellido_m: empleado.ap_materno,
+          email: empleado.email,
+          usuario: empleado.usuario
+        }
+      }
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error('Error en login:', error);
+    return res.status(500).json({ status: 'error', message: 'Error del servidor' });
   }
 };
 
-module.exports = {
-  login,
-};
+module.exports = { login };
