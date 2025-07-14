@@ -18,6 +18,10 @@ const oficinaRoutes = require('./routes/oficinaRoutes');
 const tipoBaseRoutes = require("./routes/tipoBaseRoutes");
 const registroAsistenciaRoutes = require("./routes/registroAsistenciasRoutes");
 const incidenciasRoutes = require("./routes/incidenciasRoutes");
+const notificacionesRoutes = require("./routes/notificacionesRoutes");
+const fotosRostroRoutes = require('./routes/fotosRostroRoutes');
+
+app.use(express.json({ limit: '50mb' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/sede', sedeRoutes);
@@ -26,6 +30,8 @@ app.use('/api/oficina', oficinaRoutes);
 app.use('/api/tipobase', tipoBaseRoutes);
 app.use('/api/registrarasistencia', registroAsistenciaRoutes);
 app.use('/api/inicidencia', incidenciasRoutes);
+app.use('/api/notificacion', notificacionesRoutes);
+app.use('/api/fotosRostros', fotosRostroRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);

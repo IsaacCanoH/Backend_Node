@@ -1,40 +1,78 @@
 const pool = require('../db');
 
-const crearTipoBase = async (req, res) => {
+exports.obtenerTipoBase = async (req, res) => {
     try {
-        const { tipo } = req.body;
-
-        if (!tipo) {
-            return res.status(400).json({ mensaje: "El tipo de base es obligatorio" });
-        }
-
-        const query = 'INSERT INTO tipo_base (tipo) VALUES ($1) RETURNING *';
-        const values = [tipo];
-
-        const result = await pool.query(query, values);
-
-        res.status(201).json({
-            mensaje: 'Tipo de base creada exitosamente',
-            tipobase: result.rows[0]
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ mensaje: 'Error al crear el tipo de base' });
-    }
-}
-
-const obtenerTipoBase = async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM tipo_base ORDER BY id ASC');
-        res.status(200).json(result.rows);
+        const result = await pool.query('SELECT * FROM reloj_checador_catalogo_tipo_base ORDER BY id ASC');
+        res.json({ status: "success", data: result.rows });
     } catch (error) {
         console.error(error);
         res.status(500).json({ mensaje: 'Error al obtener los tipos de bases' });
     }
 }
 
-module.exports = {
-    crearTipoBase,
-    obtenerTipoBase
+exports.obtenerDirecciones = async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM reloj_checador_catalogo_direcciones");
+    res.json({ status: "success", data: result.rows });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+// Obtener coordinaciones por dirección
+exports.obtenerCoordinacionesPorDireccion = async (req, res) => {
+  const { direccionId } = req.params;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM reloj_checador_catalogo_coordinaciones WHERE direccion_id = $1",
+      [direccionId]
+    );
+    res.json({ status: "success", data: result.rows });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+// Obtener jefaturas por coordinación
+exports.obtenerJefaturasPorCoordinacion = async (req, res) => {
+  const { coordinacionId } = req.params;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM reloj_checador_catalogo_jefaturas WHERE coordinacion_id = $1",
+      [coordinacionId]
+    );
+    res.json({ status: "success", data: result.rows });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+exports.obtenerHorario = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM reloj_checador_horarios ORDER BY id ASC');
+
+        // Cambiar nombres de campos
+        const horarios = result.rows.map(horario => ({
+            id: horario.id,
+            start: horario.ckeck_in,
+            tolerance: horario.tolerance,
+            end: horario.check_out
+        }));
+
+        res.json({ status: "success", data: horarios });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: 'Error al obtener los tipos de horarios' });
+    }
+}
+
+
+exports.obtenerOficina = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM reloj_checador_catalogo_oficinas ORDER BY id ASC');
+        res.json({ status: "success", data: result.rows });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: 'Error al obtener los tipos de horarios' });
+    }
 }
