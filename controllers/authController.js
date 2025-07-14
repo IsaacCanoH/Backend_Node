@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const db = require('../db');
 
+// Funcionalidad
+
 function md5Encrypt(password) {
   return crypto.createHash('md5').update(password).digest('hex');
 }
@@ -29,7 +31,6 @@ const login = async (req, res) => {
 
     const u = userResult.rows[0];
 
-    // Obtener nombres relacionados
     const [direccion, coordinacion, oficina, horario] = await Promise.all([
       db.query(`SELECT nombre FROM reloj_checador_catalogo_direcciones WHERE id = $1`, [u.id_direccion]),
       db.query(`SELECT nombre FROM reloj_checador_catalogo_coordinaciones WHERE id = $1`, [u.id_coordinacion]),
