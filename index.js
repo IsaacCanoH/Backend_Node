@@ -3,14 +3,23 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-
-app.use(cors());
-
 const port = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
+// Configuración de CORS correcta
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
 
+app.use(cors(corsOptions));
+
+// Middleware para parsear JSON con límite de tamaño
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Importar rutas
 const authRoutes = require('./routes/authRoutes');
 const sedeRoutes = require("./routes/sedeRoutes");
 const empleadoRoutes = require('./routes/empleadoRoutes');
@@ -21,9 +30,7 @@ const incidenciasRoutes = require("./routes/incidenciasRoutes");
 const notificacionesRoutes = require("./routes/notificacionesRoutes");
 const fotosRostroRoutes = require('./routes/fotosRostroRoutes');
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
+// Montar rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/sede', sedeRoutes);
 app.use('/api/empleado', empleadoRoutes);
@@ -34,6 +41,7 @@ app.use('/api/inicidencia', incidenciasRoutes);
 app.use('/api/notificacion', notificacionesRoutes);
 app.use('/api/fotosRostros', fotosRostroRoutes);
 
+// Iniciar servidor
 app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+    console.log(`Servidor escuchando en http://localhost:${port}`);
 });
