@@ -8,7 +8,6 @@ exports.obtenerPorEmpleado = async (req, res) => {
       `SELECT * FROM reloj_checador_notificaciones WHERE usuario_id = $1 ORDER BY fecha_creacion DESC`,
       [usuario_id]
     );
-    console.log("ID recibido:", req.params.usuario_id);
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener notificaciones' });
