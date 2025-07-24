@@ -34,13 +34,18 @@ const login = async (req, res) => {
     const [direccion, coordinacion, oficina, horario] = await Promise.all([
       db.query(`SELECT nombre FROM reloj_checador_catalogo_direcciones WHERE id = $1`, [u.id_direccion]),
       db.query(`SELECT nombre FROM reloj_checador_catalogo_coordinaciones WHERE id = $1`, [u.id_coordinacion]),
-      db.query(`SELECT nombre FROM reloj_checador_catalogo_oficinas WHERE id = $1`, [u.id_oficina]),
       db.query(`
-        SELECT check_in, tolerance, check_out
-        FROM reloj_checador_horarios
-        WHERE id = $1
-      `, [u.ig_grupo_horario])
+    SELECT nombre, latitud, longitud 
+    FROM reloj_checador_catalogo_oficinas 
+    WHERE id = $1
+  `, [u.id_oficina]),
+      db.query(`
+    SELECT check_in, tolerance, check_out
+    FROM reloj_checador_horarios
+    WHERE id = $1
+  `, [u.ig_grupo_horario])
     ]);
+
 
     const timestamp = new Date().toISOString();
     const requestId = crypto.randomUUID();
@@ -68,7 +73,9 @@ const login = async (req, res) => {
           office_name: oficina.rows[0]?.nombre || '',
           checking_hash: u.clave_acceso,
           group_work: u.ig_grupo_horario,
-          block_key_qr: u.key_qr || ''
+          block_key_qr: u.key_qr || '',
+          lat: oficina.rows[0]?.latitud,
+          lng: oficina.rows[0]?.longitud
         },
         schedule: {
           start: horario.rows[0]?.ckeck_in || '',

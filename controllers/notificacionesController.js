@@ -5,11 +5,15 @@ exports.obtenerPorEmpleado = async (req, res) => {
   const { usuario_id } = req.params;
   try {
     const result = await db.query(
-      `SELECT * FROM reloj_checador_notificaciones WHERE usuario_id = $1 ORDER BY fecha_creacion DESC`,
+      `SELECT * 
+       FROM reloj_checador_notificaciones 
+       WHERE usuario_id = $1 AND vista = FALSE
+       ORDER BY fecha_creacion DESC`,
       [usuario_id]
     );
     res.json(result.rows);
   } catch (err) {
+    console.error('Error al obtener notificaciones:', err);
     res.status(500).json({ error: 'Error al obtener notificaciones' });
   }
 };
@@ -49,3 +53,23 @@ exports.marcarComoLeida = async (req, res) => {
     res.status(500).json({ error: 'Error al marcar como leída' });
   }
 };
+
+// Marcar notificación como vista
+exports.marcarComoVista = async (req, res) => {
+  const { notificacion_id } = req.params;
+
+  try {
+    const result = await db.query(
+      `UPDATE reloj_checador_notificaciones 
+       SET vista = TRUE
+       WHERE notificacion_id = $1 
+       RETURNING *`,
+      [notificacion_id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error al marcar como vista:', err);
+    res.status(500).json({ error: 'Error al marcar como vista' });
+  }
+};
+
