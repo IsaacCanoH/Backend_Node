@@ -19,15 +19,15 @@ exports.obtenerPorEmpleado = async (req, res) => {
 };
 
 exports.crearNotificacion = async (req, res) => {
-  const { usuario_id, titulo, mensaje, tipo, metadata } = req.body;
+  const { usuario_id, titulo, mensaje, tipo, leida, vista, metadata } = req.body;
 
   try {
     const result = await db.query(
       `INSERT INTO reloj_checador_notificaciones 
-        (usuario_id, titulo, mensaje, tipo, metadata)
-       VALUES ($1, $2, $3, $4, $5::jsonb) 
+        (usuario_id, titulo, mensaje, tipo, leida, vista, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb) 
        RETURNING *`,
-      [usuario_id, titulo, mensaje, tipo, metadata]
+      [usuario_id, titulo, mensaje, tipo, leida, vista, metadata]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -71,5 +71,4 @@ exports.marcarComoVista = async (req, res) => {
     console.error('Error al marcar como vista:', err);
     res.status(500).json({ error: 'Error al marcar como vista' });
   }
-};
-
+};  
