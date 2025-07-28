@@ -2,16 +2,16 @@ const db = require('../db');
 
 const crearAsistencia = async (req, res) => {
   try {
-    const { usuario_id, tipo, fecha_hora_registro, ubicacion_lat, ubicacion_lon, condicion } = req.body;
+    const { usuario_id, tipo, condicion, fecha_hora_registro, ubicacion_lat, ubicacion_lon } = req.body;
 
     const query = `
       INSERT INTO reloj_checador_asistencias 
-      (usuario_id, tipo, fecha_hora_registro, ubicacion_lat, ubicacion_lon, condicion)
+      (usuario_id, tipo, condicion, fecha_hora_registro, ubicacion_lat, ubicacion_lon )
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
 
-    const values = [usuario_id, tipo, fecha_hora_registro, ubicacion_lat, ubicacion_lon, condicion];
+    const values = [usuario_id, tipo, condicion, fecha_hora_registro, ubicacion_lat, ubicacion_lon];
 
     const { rows } = await db.query(query, values);
     res.status(201).json({ status: 'success', data: rows[0] });

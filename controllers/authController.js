@@ -78,7 +78,7 @@ const login = async (req, res) => {
           lng: oficina.rows[0]?.longitud
         },
         schedule: {
-          start: horario.rows[0]?.ckeck_in || '',
+          start: horario.rows[0]?.check_in || '',
           tolerance: horario.rows[0]?.tolerance || '',
           end: horario.rows[0]?.check_out || ''
         }
