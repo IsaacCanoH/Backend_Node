@@ -66,3 +66,13 @@ exports.obtenerIncidencias = async (req, res) => {
     res.status(500).json({ error: "Error del servidor." });
   }
 };
+
+exports.obtenerTipoIncidencia = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM reloj_checador_catalogo_tipo_incidencia ORDER BY id ASC');
+        res.json({ status: "success", data: result.rows });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: 'Error al obtener los tipos de incidencias' });
+    }
+}

@@ -20,7 +20,7 @@ const login = async (req, res) => {
     // Consulta principal del usuario
     const userResult = await db.query(`
       SELECT usuario_id, nombre, ap_paterno, ap_materno, email, usuario, ping_hash,
-             id_direccion, id_coordinacion, id_jefatura, id_oficina, ig_grupo_horario, key_qr, clave_acceso
+             id_direccion, id_coordinacion, id_jefatura, id_oficina, ig_grupo_horario, key_qr, clave_acceso, rol_usuario, fecha_registro
       FROM reloj_checador_usuarios
       WHERE usuario = $1 AND clave_acceso = $2
     `, [usuario, hashedPassword]);
@@ -62,7 +62,8 @@ const login = async (req, res) => {
           apellido_m: u.ap_materno,
           email: u.email,
           usuario: u.usuario,
-          pin: u.ping_hash
+          rol: u.rol_usuario,
+          fecha_creacion: u.fecha_registro
         },
         work_info: {
           assignment_id: u.id_direccion,
@@ -72,6 +73,7 @@ const login = async (req, res) => {
           office_id: u.id_oficina,
           office_name: oficina.rows[0]?.nombre || '',
           checking_hash: u.clave_acceso,
+          pin: u.ping_hash,
           group_work: u.ig_grupo_horario,
           block_key_qr: u.key_qr || '',
           lat: oficina.rows[0]?.latitud,
@@ -89,7 +91,7 @@ const login = async (req, res) => {
       }
     };
 
-    return res.status(200).json([response]); // <-- se envía dentro de un array como pediste
+    return res.status(200).json([response]); 
   } catch (error) {
     console.error('Error en login:', error);
     return res.status(500).json({ status: 'error', message: 'Error del servidor' });
