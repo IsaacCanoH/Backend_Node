@@ -29,6 +29,7 @@ const registroAsistenciaRoutes = require("./routes/registroAsistenciasRoutes");
 const incidenciasRoutes = require("./routes/incidenciasRoutes");
 const notificacionesRoutes = require("./routes/notificacionesRoutes");
 const fotosRostroRoutes = require('./routes/fotosRostroRoutes');
+const grupoRoutes = require('./routes/grupoRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/sede', sedeRoutes);
@@ -39,6 +40,7 @@ app.use('/api/asistencias', registroAsistenciaRoutes);
 app.use('/api/inicidencia', incidenciasRoutes);
 app.use('/api/notificacion', notificacionesRoutes);
 app.use('/api/fotosRostros', fotosRostroRoutes);
+app.use('/api/grupo', grupoRoutes);
 
 // Servidor
 app.listen(port, () => {

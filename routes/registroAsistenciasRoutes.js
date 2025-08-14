@@ -6,5 +6,6 @@ const registroAsistenciaController = require("../controllers/registroAsistencias
 
 router.post("/registrar-asistencia",upload.none(), registroAsistenciaController.crearAsistencia);
 router.get("/obtener-asistencia/:usuario_id", registroAsistenciaController.obtenerAsistenciasPorUsuario);
+router.get("/obtener-asistencias-mes", registroAsistenciaController.obtenerAsistenciasMensuales);
 
 module.exports = router;

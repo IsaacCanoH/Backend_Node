@@ -1,6 +1,5 @@
 const db = require('../db');
 
-// Obtener todas las notificaciones de un empleado
 exports.obtenerPorEmpleado = async (req, res) => {
   const { usuario_id } = req.params;
   try {

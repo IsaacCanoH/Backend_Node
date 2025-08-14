@@ -6,18 +6,17 @@ const guardarFotoRostro = async (req, res) => {
         const { usuario_id, imagen_base64, descriptor } = req.body;
 
 
-        // Validación correcta de array
         if (!usuario_id || !imagen_base64 || !Array.isArray(descriptor) || descriptor.length === 0) {
             return res.status(400).json({ mensaje: 'Faltan datos requeridos o descriptor inválido' });
         }
 
         await pool.query(
             `INSERT INTO reloj_checador_fotos_rostro (usuario_id, imagen_base64, descriptor) 
-     VALUES ($1, $2, $3::jsonb)`,
+             VALUES ($1, $2, $3::jsonb)`,
             [
                 usuario_id,
                 imagen_base64,
-                JSON.stringify(descriptor) // <-- Convierte tú el array a JSON válido aquí
+                JSON.stringify(descriptor) 
             ]
         );
 
@@ -29,7 +28,6 @@ const guardarFotoRostro = async (req, res) => {
     }
 };
 
-// Obtener la última foto de rostro
 const obtenerFotoRostro = async (req, res) => {
     try {
         const { usuario_id } = req.params;
